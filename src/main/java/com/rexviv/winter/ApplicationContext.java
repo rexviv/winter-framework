@@ -1,4 +1,4 @@
-package com.rexviv.springslim;
+package com.rexviv.winter;
 
 import java.beans.Introspector;
 import java.io.File;
@@ -21,12 +21,34 @@ public class ApplicationContext {
             path = path.replace(".", "/");
             ClassLoader classLoader = ApplicationContext.class.getClassLoader();
             URL url = classLoader.getResource(path);
-
             File files = new File(url.getFile());
-            if(files.isDirectory()) {
-                for (File file : files.listFiles()) {
-                    String fileName = file.getAbsolutePath();
+            doScan(files);
+        } else {
+            throw new RuntimeException("Missing @ComponentScan annotation");
+        }
 
+        for(String beanName : beanDefinitionMap.keySet()){
+            Object bean = doCreateBean(beanName, beanDefinitionMap.get(beanName));
+            for(Field f: bean.getClass().getDeclaredFields()){
+                f.setAccessible(true);
+                try {
+                    f.set(bean, getBean(f.getName()));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            singletonObjects.put(beanName, bean);
+        }
+    }
+
+    private void doScan(File files){
+        ClassLoader classLoader = ApplicationContext.class.getClassLoader();
+        if(files.isDirectory()) {
+            for (File file : files.listFiles()) {
+                if(file.isDirectory()){
+                    doScan(file);
+                }else{
+                    String fileName = file.getAbsolutePath();
                     if (file.toString().endsWith(".class")) {
                         BeanDefinition beanDefinition = new BeanDefinition();
 
@@ -35,7 +57,7 @@ public class ApplicationContext {
 
                         try {
                             Class<?> clazz = classLoader.loadClass(className);
-                            String beanName = Introspector.decapitalize(className.substring(className.lastIndexOf(".")+1));
+                            String beanName = Introspector.decapitalize(className.substring(className.lastIndexOf(".") + 1));
 
                             if (clazz.isAnnotationPresent(Component.class)) {
                                 beanDefinition.setType(clazz);
@@ -53,21 +75,6 @@ public class ApplicationContext {
                     }
                 }
             }
-        } else {
-            throw new RuntimeException("Missing @ComponentScan annotation");
-        }
-
-        for(String beanName : beanDefinitionMap.keySet()){
-            Object bean = doCreateBean(beanName, beanDefinitionMap.get(beanName));
-            for(Field f: bean.getClass().getDeclaredFields()){
-                f.setAccessible(true);
-                try {
-                    f.set(bean, getBean(f.getName()));
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            singletonObjects.put(beanName, bean);
         }
     }
 

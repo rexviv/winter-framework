@@ -1,4 +1,4 @@
-package com.rexviv.springslim;
+package com.rexviv.winter;
 
 public class BeanDefinition {
     private Class type;

@@ -1,7 +1,8 @@
-package com.rexviv.test;
+package com.rexviv.test.service;
 
-import com.rexviv.springslim.Autowired;
-import com.rexviv.springslim.Component;
+import com.rexviv.test.pojo.User;
+import com.rexviv.winter.Autowired;
+import com.rexviv.winter.Component;
 
 @Component
 public class UserService {
