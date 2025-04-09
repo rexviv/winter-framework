@@ -6,12 +6,40 @@
 
     <groupId>com.rexviv</groupId>
     <artifactId>winter-framework</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revison</version>
 
     <properties>
+        <revison>0.1.1</revison>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <tomcat.version>10.1.33</tomcat.version>
     </properties>
+
+    <dependencies>
+        <!-- Tomcat 11 内嵌依赖（适配 Java 21） -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <!-- 支持 JSP 和 EL -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-el</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+    </dependencies>
 
 </project>

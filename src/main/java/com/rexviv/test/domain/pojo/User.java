@@ -1,4 +1,4 @@
-package com.rexviv.test.pojo;
+package com.rexviv.test.domain.pojo;
 
 import com.rexviv.winter.Component;
 
